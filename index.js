@@ -11,6 +11,8 @@ var defaults = {
     replacement: "time"
 };
 
+var time = new Date().getTime().toString();
+
 /**
  * @param {string} src
  * @param {string|array} matcher
@@ -22,6 +24,7 @@ exports.breakCache = function (src, matcher, config) {
     var opts = mergeOptions(_.cloneDeep(defaults), config);
 
     function replacer(src, match) {
+
         var replacement = _getReplacement(opts.replacement, opts);
         var replacer    = _getReplacer(opts.position, replacement);
         var regex       = _getRegex(match, opts.position);
@@ -47,6 +50,7 @@ exports.breakCache = function (src, matcher, config) {
 function _getReplacement(replacement, config) {
 
     if (replacement === "time") {
+        return time;
         return new Date().getTime().toString();
     }
 
@@ -74,7 +78,7 @@ function _getReplacement(replacement, config) {
 function _getRegex(matcher, position) {
 
     function fullMatcher() {
-        return new RegExp("(('|\")(.+?)?)("+matcher+")([\\w\\?=]*)('|\")", "g");
+        return new RegExp("(('|\")(.+?)?)?("+matcher+")([\\w\\?=]*)('|\")?", "g");
     }
 
     function prepareString(seg) {
